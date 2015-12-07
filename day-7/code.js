@@ -8,12 +8,17 @@ function assembleCircuit (instructions) {
 		outputs = getOutputs(),
 		pairs = getPairs();
 
-	var i = 0;
-	while(!allDone()/* && i < 10*/) {
-		console.warn(countDone());
+	/* Part 2 */
+	// references.some(function(reference) {
+	// 	if(reference.to == "b") {
+	// 		reference.from.right = 46065;
+	// 		return true;
+	// 	}
+	// 	return false;
+	// });
+
+	while(!allDone()) {
 		computeValues();
-		console.log(pairs.a);
-		i++;
 	}
 
 	return pairs.a.value;
@@ -90,10 +95,6 @@ function assembleCircuit (instructions) {
 				right = pairs[reference.from.right]? pairs[reference.from.right].value: reference.from.right;
 
 				if(!isNaN(+left) && !isNaN(+right)) {
-					if(~~left !== left || ~~right !== right)
-						console.error(left, right);
-					if(reference.from.op == undefined)
-						console.error(reference);
 					switch(reference.from.op) {
 					case "RSHIFT": 
 						pairs[reference.to].value = left >> right;
@@ -107,13 +108,10 @@ function assembleCircuit (instructions) {
 					case "LSHIFT":
 						pairs[reference.to].value = left << right;
 						break;
-					default:
-						console.error(reference);
 					}
 					pairs[reference.to].done = true;
 				} else if(!isNaN(+right)) {
 					if(reference.from.left == undefined) {
-						console.info(reference.from.op);
 						if(reference.from.op == "NOT")
 							pairs[reference.to].value = ~right;
 						else
